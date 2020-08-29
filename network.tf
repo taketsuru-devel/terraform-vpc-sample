@@ -13,14 +13,14 @@ resource "aws_vpc" "test_original_vpc" {
   enable_dns_hostnames = "true"
   enable_dns_support = "true"
   tags = {
-    Name = "terraform-vpc"
+    Name = "${var.project_name}-vpc"
   }
 }
 
 resource "aws_internet_gateway" "test_original_igw" {
   vpc_id = "${aws_vpc.test_original_vpc.id}"
   tags = {
-    Name = "terraform-igw"
+    Name = "${var.project_name}-igw"
   }
 }
 
@@ -31,22 +31,22 @@ resource "aws_route_table" "test_original_isolated" {
     gateway_id = "${aws_internet_gateway.test_original_igw.id}"
   }
   tags = {
-    Name = "terraform-rt"
+    Name = "${var.project_name}-rtb"
   }
 }
 
-resource "aws_subnet" "test_public_a" {
+resource "aws_subnet" "test_subnet" {
   vpc_id = "${aws_vpc.test_original_vpc.id}"
   cidr_block = "192.168.129.0/24"
   availability_zone = "ap-northeast-1a"
   tags = {
-    Name = "terraform-subnet"
+    Name = "${var.project_name}-subnet"
   }
 }
 
 #cannot define tags
-resource "aws_route_table_association" "test_public_a_assoc" {
-  subnet_id = "${aws_subnet.test_public_a.id}"
+resource "aws_route_table_association" "test_subnet_assoc" {
+  subnet_id = "${aws_subnet.test_subnet.id}"
   route_table_id = "${aws_route_table.test_original_isolated.id}"
 }
 
@@ -55,7 +55,7 @@ resource "aws_route_table_association" "test_public_a_assoc" {
 #no definition ingress because of isolated
 
 resource "aws_security_group" "test_security_group" {
-  name = "TEST_VPC"
+  name = "${var.project_name}-sg"
   vpc_id = "${aws_vpc.test_original_vpc.id}"
   egress { 
       from_port = 0
@@ -63,8 +63,8 @@ resource "aws_security_group" "test_security_group" {
       protocol = "-1"
       cidr_blocks = ["0.0.0.0/0"]
   }
-  description = "terraform-sg"
+  description = "${var.project_name}-sg"
   tags = {
-    Name = "terraform-sg"
+    Name = "${var.project_name}-sg"
   }
 }
