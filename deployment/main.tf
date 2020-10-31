@@ -15,7 +15,11 @@ module "module_vpc" {
 
   project_name = "vpc-sample"
   vpc_cidr = "10.0.16.0/20"
-  rtb_cidr = "10.0.48.0/20"
-  subnet_cidr = "10.0.17.0/24"
-  subnet_az = "ap-northeast-1a"
+  subnet_setting = [{
+    az_name = "ap-northeast-1a"
+    cidr = "10.0.17.0/24"
+  }, {
+    az_name = "ap-northeast-1c"
+    cidr = "10.0.18.0/24"
+  }]
 }

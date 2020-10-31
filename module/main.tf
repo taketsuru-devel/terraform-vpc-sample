@@ -27,7 +27,7 @@ resource "aws_internet_gateway" "this" {
 resource "aws_route_table" "this" {
   vpc_id = aws_vpc.this.id
   route {
-    cidr_block = var.rtb_cidr
+    cidr_block = var.cidr_of_rtb_to_igw
     gateway_id = aws_internet_gateway.this.id
   }
   tags = {
@@ -36,18 +36,20 @@ resource "aws_route_table" "this" {
 }
 
 resource "aws_subnet" "this" {
+  count = length(var.subnet_setting)
   vpc_id = aws_vpc.this.id
-  cidr_block = var.subnet_cidr
-  availability_zone = var.subnet_az
+  cidr_block = var.subnet_setting[count.index].cidr
+  availability_zone = var.subnet_setting[count.index].az_name
   map_public_ip_on_launch = var.public_ip_for_ec2
   tags = {
-    Name = format("%s-subnet", var.project_name)
+    Name = format("%s-subnet-%s", var.project_name, var.subnet_setting[count.index].az_name)
   }
 }
 
 #cannot define tags
 resource "aws_route_table_association" "this" {
-  subnet_id = aws_subnet.this.id
+  count = length(aws_subnet.this)
+  subnet_id = aws_subnet.this[count.index].id
   route_table_id = aws_route_table.this.id
 }
 
