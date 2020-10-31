@@ -11,12 +11,12 @@ v0.13.0
 # input
 - project名
 - vpcのcidr
-- route tableのcidr
-- subnetのcidr
+- route tableがigwに渡す宛先ipのcidr(デフォ値0.0.0.0/0)
+- subnetの{az,cidr}のlist
 
 # output
 - vpcのid
-- subnetのid
+- subnetのids
 - security groupのid
 
 # コマンド
