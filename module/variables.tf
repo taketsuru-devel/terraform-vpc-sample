@@ -17,3 +17,9 @@ variable "subnet_cidr" {
 variable "subnet_az" {
   description = "az of subnet, ex: ap-northeast-1a"
 }
+
+variable "public_ip_for_ec2" {
+  description = "attach public ip to ec2 when they are launched"
+  type = bool
+  default = false
+}
