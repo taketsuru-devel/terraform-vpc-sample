@@ -1,6 +1,13 @@
+terraform {
+  backend "s3" {
+    bucket = "terraform-tfstate-s3"
+    region = "ap-northeast-1"
+    key = "vpc-sample"
+  }
+}
+
 provider "aws" {
   region = "ap-northeast-1"
-  profile = "terraform_worker"
 }
 
 module "module_vpc" {
